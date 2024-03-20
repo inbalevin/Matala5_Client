@@ -1,0 +1,273 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="../js/ajaxCalls.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.css">
+    <link href="../css/StyleSheet.css" rel="stylesheet" />
+
+    <script>
+        uses12 = [];
+        //let api = server + "/api/Users/Update?email=" + us.email + "&firstName=" + us.FirstName + "&familyName=" + us.FamilyName
+        //    + "&password=" + us.Password + "&newPassword=" + us.Password; // לתקן לסיסמא החדשה
+        $(document).ready(function () {
+            let port = 7195;
+            server = `https://localhost:${port}`;
+            $("#pForm").submit(f1);
+            $("#pForm1").submit(Login);
+            $("#LogOut").submit(LogOut);
+           
+             if (sessionStorage.getItem('myUsers') != null) {
+
+                 $("#up").show();
+                 $("#LogOut").show();  
+             }
+
+            //  $("#EndTB").on("blur", checkDate);
+            //  displayFlatId();
+
+            if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+                let port = "7235";
+                server = 'https://localhost:' + port;
+
+            }
+            else {
+                server = "https://proj.ruppin.ac.il/cgroup63/test2/tar1";
+            }
+
+
+            getUS();
+
+        });
+
+        function getUS() {
+            api = server + "/api/Users";
+            ajaxCall("GET", api, "", getSCB, getECB);
+        }
+
+
+        function getSCB(users) {
+            console.log(users);
+            uses12 = users;
+            console.log(uses12);
+            console.log(uses12[uses12.length - 1]);//האחרון שנירשם
+        }
+
+        function getECB(err) {
+            console.log(err);
+        }
+
+
+        function AddUsers() {
+            var Newuser = {
+                FirstName: $("#FirstName").val(),
+                FamilyName: $("#FamilyName").val(),
+                Email: $("#userEmail").val(),
+                isAdmin: false,
+                isActive: false,
+                Password: $("#Password").val(),
+                
+            }
+
+            api = server + "/api/Users";
+            ajaxCall("POST", api, JSON.stringify(Newuser), postSCB_addUser, postECB_addUser);
+            swal("Register Successfuly!", "Great Job", "success");
+
+        }
+
+        function postSCB_addUser(users) {
+            console.log(users);
+            swal("Added Successfuly!", "Great Job", "success");
+
+        }
+
+        function postECB_addUser(err) {
+            console.log(err);
+            swal("Error", "The email already exists in the system ", "error");
+        }
+
+        function Login() {
+
+            let userEmail = $("#DEmail").val();
+            let userPassword = $("#DPassword").val();
+
+            let user = {
+                FirstName: " ",
+                FamilyName: " ",
+                Email: userEmail,
+                Password: userPassword
+            }
+
+            if (sessionStorage.getItem('myUsers') == null) {
+
+                let stringifiedUser = JSON.stringify(user);
+                let api = server + "/api/Users/LoginUser";
+                ajaxCall("POST", api, stringifiedUser, postSCB_Login, postECB_Login);
+
+                return false;
+            }
+            else {
+                swal("You must disconnect from the previous user", "Login error", "error");
+                return false;
+
+            }
+            return false;
+
+        }
+
+        function postSCB_Login(data) {
+            console.log("this is data");
+            console.log(data);
+
+            let userEmail = $("#DEmail").val();
+            sessionStorage.setItem('myUsers', userEmail);
+
+            swal("Login Successfuly!", "Great Job", "success");
+            $("#up").show();  
+            $("#LogOut").show();
+
+
+            window.location.href = "flats.html";
+
+            
+        }
+
+        function postECB_Login(err) {
+            console.log(err);
+            let errMsg = err.responseText;
+
+            swal("Login Failed!", errMsg, "error");
+
+        }
+
+        function f1() {
+            AddUsers();
+            return false;
+        }
+
+        function LogOut() {
+            sessionStorage.clear();
+
+            swal("Logout Successfuly!", "Great Job", "success");
+
+            window.location.href = "Home.html";
+        }
+
+        function editDetails() {
+            $("#editForm").show();
+        }
+
+        function Edit() {
+            
+            var EditUser = {
+                Email: $("#editEmail").val(),
+                Password: $("#editPassword").val(),
+                NewPassword: $("#newPassword").val(),
+                FirstName: $("#newFirstName").val(),
+                FamilyName: $("#newFamilyName").val(),
+            }
+
+            let stringifiedUser = JSON.stringify(EditUser);
+            let api = server + "/api/Users/Update";
+            ajaxCall("PUT", api, stringifiedUser, postSCB_Edit, postECB_Edit);
+            //swal("Update Successfuly!", "Great Job", "success");
+
+            return false;
+        }
+
+        function postSCB_Edit(data) {
+            console.log("this is EDIT");
+            console.log(data);
+
+            swal("Edit Successfuly!", "Great Job", "success");
+        }
+
+        function postECB_Edit(err) {
+            console.log("this is err");
+            console.log(err);
+            swal("Error", "cannot edit details", "error");
+        }
+
+        function MoveToHome() {
+            window.location.href = "Home.html";
+        }
+
+        function editDetails() {
+            if (sessionStorage.getItem("myUsers") == null) {
+                swal("You have to login first!", "Error", "error");
+            }
+            else {
+                window.location.href = "Update.html";
+            }
+        }
+
+
+
+
+
+    </script>
+</head>
+<body>
+    <div class="container">
+
+        <form id="pForm">
+            <h2>Register</h2>
+            <div class="form-group">
+                <label for="FirstName"><span class="red-star">★</span> First Name</label>
+                <input type="text" class="form-control" id="FirstName" placeholder="Enter First Name " required />
+            </div>
+            <div class="form-group">
+                <label for="FamilyName"><span class="red-star">★ </span> Family Name</label>
+                <input type="text" class="form-control" id="FamilyName" placeholder="Enter Family Name " required />
+            </div>
+            <div class="form-group">
+                <label for="userEmail"><span class="red-star">★ </span>Email</label>
+                <input type="text" class="form-control" id="userEmail" placeholder="Enter Email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="Password"><span class="red-star">★ </span>Password</label>
+                <input type="text" class="form-control" id="Password" placeholder="Enter Password " required />
+            </div>
+
+            <input type="submit" value="Add User" />
+
+        </form>
+
+    </div>
+    <!--<form id="pForm1">
+        <div>
+            <div class="container">
+                <div class="form-group">
+                    <h2>Login</h2>
+
+                    <div class="form-group">
+                        <label for="DEmail"><span class="red-star">★</span>Email</label>
+                        <input type="email" class="form-control" id="DEmail" placeholder="Enter the Email" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="DPassword"><span class="red-star">★</span>Password</label>
+                        <input type="password" class="form-control" id="DPassword" placeholder="Enter the Password " required />
+                    </div>
+                    <input type="submit" id="Login" value="Login" />
+                </div>
+            </div>
+        </div>
+    </form>-->
+
+    <div class="container">
+        <input type="button"   onclick="MoveToHome()" id="home" value="home" />
+        <input type="button"   onclick="LogOut()" id="LogOut" value="Log Out" />
+        <input type="button"   onclick="editDetails()" id="up" value="Update" />
+    </div>
+
+</body>
+</html>

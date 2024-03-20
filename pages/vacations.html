@@ -1,0 +1,236 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="../js/ajaxCalls.js"></script>
+   
+    <link href="../css/StyleSheet.css" rel="stylesheet" />
+    <script>
+
+        $(document).ready(function () {
+            let port = 7195;
+            server = `https://localhost:${port}`;
+            $("#pForm").submit(f1);
+            $("#EndTB").on("blur", checkDate);
+            displayDetails();
+            if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+                let port = "7235";
+                server = 'https://localhost:' + port;
+
+            }
+            else {
+                server = "https://proj.ruppin.ac.il/cgroup63/test2/tar1";
+            }
+            getVac();
+
+
+        });
+
+        function getVac() {
+            api = server + "/api/vacations";
+            ajaxCall("GET", api, "", getSCB, getECB);
+        }
+
+
+        function getSCB(VACArr) {
+            console.log(VACArr);
+
+            $("#btnVac").click(function () {
+                $("#flatlist").html("");
+                let userI = $("#USERIDTB").val();
+                if (VACArr.length != 0) {
+                    var str = `<h2>My Vacations</h2> <div class="container">
+                        <div id="flatlist" class="row">`;
+                    for (var i = 0; i < VACArr.length; i++) {
+                        str += `<div class="col-md-3 newCol">
+                                     <h4> Vacation ${i + 1}:</h4>
+                                     ID:${VACArr[i].id}<br/>
+                                     User Id: ${VACArr[i].userId}<br/>
+                                     FlatId: ${VACArr[i].flatId}<br/>
+                                     Start Date: ${VACArr[i].startDate}<br/>
+                                     EndDate: ${VACArr[i].endDate}<br/>
+                                     </div> <div/>`
+                    }
+                }
+                str += `  </div> <br/>`
+                $("#flatlist").append(str);
+            })
+
+        }
+        function getECB(err) {
+            console.log(err);
+        }
+
+        function displayDetails() {
+
+            //הצגה של הדירה
+            let flatId = sessionStorage.getItem("flatId");
+            $("#FlatId").val(flatId);
+
+            //הצגה של היוזר
+            let user = sessionStorage.getItem("myUsers");
+            user_json = JSON.parse(user);
+            userId = user_json.email;
+            $("#USERIDTB").val(userId);
+
+        }
+        function checkDate() {
+            ////בדיקה שהתאריך סיום גדול מהתאריך התחלה
+            let Ed1 = new Date($('#EndTB').val()); // נמיר את התאריכים שנכנסו לאובייקט מסוג תאריך כדי שנוכל לבצע עליו חישובים
+            let Sd1 = new Date($('#StartTB').val());
+            let newD = Math.abs(Ed1 - Sd1); // נחזיר את ההפרש בין שני התאריכים במילישניות ובערך מוחלט
+            let daysDiff = Math.ceil(newD / (1000 * 3600 * 24)); // מחלק את ההפרש במילישניות במספר המילשניות וכך מקבלים את מספר הימים בין התאריכים ומעגלים כלפי מעלה עם הceil
+
+            if (Ed1 < Sd1) {
+                this.validity.valid = false;
+                this.setCustomValidity('The end date can`t be earlier than the start date, please enter valid dates');
+            }
+            else if (daysDiff > 20) {
+                this.validity.valid = false;
+                this.setCustomValidity('The vacation can`t exceed 20 days, please enter valid dates')
+            }
+            else {
+                this.validity.valid = true;
+                this.setCustomValidity('');
+            }
+
+        }
+
+        function AddVacation() {
+            let vacation = {
+                Id: $("#IDTB").val(),
+                UserId: $("#USERIDTB").val(),
+                FlatId: $('#FlatId').val(),
+                StartDate: $('#StartTB').val(),
+                EndDate: $('#EndTB').val()
+            }
+
+            api = server + "/api/vacations";
+            ajaxCall("POST", api, JSON.stringify(vacation), postSCB, postECB);
+            /* swal("Submitted to the server!", "Great Job", "success");*/
+        }
+
+        function postSCB(vacs) {
+            console.log(vacs);
+            if (vacs == false) {
+                swal("Error", "Please try again.", "error");
+            }
+            else {
+                swal("Added Successfuly!", "Great Job", "success");
+            }
+            getVac();
+
+        }
+
+        function postECB(err) {
+            console.log(err);
+        }
+
+        function f1() {
+            AddVacation();
+            return false;
+        }
+
+        function MoveToFlats() {
+            if (sessionStorage.getItem("myUsers") == null) {
+                swal("You have to login first!", "Error", "error");
+                //לקרוא ללוגאין
+            }
+            else {
+                window.location.href = "flats.html";
+            }
+        }
+
+        function MoveToVacations() {
+            if (sessionStorage.getItem("myUsers") == null) {
+                swal("You have to login first!", "Error", "error");
+                //לקרוא ללוגאין
+            }
+            else {
+                window.location.href = "vacations.html";
+            }
+        }
+
+        function MoveToUpdate() {
+            if (sessionStorage.getItem("myUsers") == null) {
+                swal("You have to login first!", "Error", "error");
+                //לקרוא ללוגאין
+            }
+            else {
+                window.location.href = "Update.html";
+            }
+        }
+
+        function MoveToLogin() {
+            if (sessionStorage.getItem("myUsers") == null) {
+                swal("You have to login first!", "Error", "error");
+                //לקרוא ללוגאין
+            }
+            else {
+                window.location.href = "Login.html";
+            }
+        }
+
+        function MoveToHome() {
+            window.location.href = "Home.html";
+            
+        }
+
+        function Logout() {
+            sessionStorage.clear();
+
+            swal("Logout Successfuly!", "Great Job", "success");
+            window.location.href = "Home.html";
+
+        }
+
+
+    </script>
+</head>
+<body>
+    <div class="container">
+        <form id="pForm">
+            <h2>Insert A new Vacation</h2>
+            <div class="form-group">
+                <label for="FlatId"><span> Flat ID</span> </label>
+                <input type="text" class="form-control" id="FlatId" disabled />
+            </div>
+            <div class="form-group">
+                <label for="USERIDTB"><span class="red-star">★ </span>User ID</label>
+                <input type="text" class="form-control" id="USERIDTB" disabled>
+            </div>
+            <div class="form-group">
+                <label for="IDTB"><span class="red-star">★ </span>ID</label>
+                <input type="number" class="form-control" id="IDTB" placeholder="Enter the ID" required>
+            </div>
+            <div class="form-group">
+                <label for="StartTB"><span class="red-star">★ </span>Start Date</label>
+                <input type="date" class="form-control" id="StartTB" placeholder="Enter the Start Date " required />
+            </div>
+            <div class="form-group">
+                <label for="EndTB"><span class="red-star">★ </span>End Date</label>
+                <input type="date" class="form-control" id="EndTB" placeholder="Enter the End Date " required />
+            </div>
+
+            <input type="submit" value="Submit new vacation" class="btn" />
+
+        </form>
+        <br /> <button id="btnVac" class="btn">My vacations </button><br /><br /><br /><br /><br /><br /><br />
+        <div id="flatlist">
+
+
+        </div>
+        <button class=btn id="flats" onclick="MoveToFlats()">Flats</button><br /><br />
+        <button class=btn id="LogOut" onclick="Logout()">Logout</button><br /><br />
+        <button class=btn id="home" onclick="MoveToHome()">Home</button><br /><br />
+
+    </div>
+
+</body>
+</html>

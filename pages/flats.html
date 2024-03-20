@@ -1,0 +1,296 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+    <script src="../js/ajaxCalls.js"></script>
+    <!--<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>-->
+
+
+    <link href="../css/StyleSheet.css" rel="stylesheet" />
+    <script>
+
+        //email = "";
+        var user = {};
+        $(document).ready(function () {
+            let port = 7195;
+            server = `https://localhost:${port}`;
+            $('#pForm').submit(submit1);
+            $(document).on("click", ".btn", moveVac);
+
+            console.log(sessionStorage.getItem('myUsers'));
+
+            if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+                let port = "7235";
+                server = 'https://localhost:' + port;
+
+            }
+            else {
+                server = "https://proj.ruppin.ac.il/cgroup63/test2/tar1";
+
+            }
+
+            getFlat();
+            getUS();
+
+            if (sessionStorage.getItem("myUsers") == null) {
+                swal("You have to login first!", "Error", "error");
+                //לקרוא ללוגאין
+            }
+
+            
+        })
+
+        function submitLogin() {
+
+            if (sessionStorage.getItem('myUsers') == null) {
+
+                email = document.getElementById('email').value;
+                password = document.getElementById('psw').value
+
+                user = {
+                    FirstName: " ",
+                    FamilyName: " ",
+                    Email: email,
+                    Password: password
+                }
+
+                Login(user);    
+                //document.getElementById("popupForm").style.display = "none";
+                return false;
+
+            }
+            return false;
+        }
+
+
+        function Login(user) {
+
+            if (sessionStorage.getItem('myUsers') == null) {
+
+                let stringifiedUser = JSON.stringify(user);
+                let api = server + "/api/Users/LoginUser";
+                ajaxCall("POST", api, stringifiedUser, postSCB_Login, postECB_Login);
+
+                return false;
+            }
+            else {
+                swal("You must disconnect from the previous user", "Login error", "error");
+                return false;
+
+            }
+            return false;
+
+        }
+
+        function postSCB_Login(data) {
+            console.log(data);
+
+            sessionStorage.setItem('myUsers', user.Email);
+            swal("Login Successfuly!", "Great Job", "success");
+
+            $("#pForm").show();
+            $("#flatlist").show();
+        }
+
+        function postECB_Login(err) {
+            console.log(err);
+
+            swal("Error", "Please try again.", "error");
+        }
+
+        function getUS() {
+            api = server + "/api/Users";
+            ajaxCall("GET", api, "", getSCB_users, getECB_users);
+        }
+
+
+        function getSCB_users(users) {
+            console.log(users);
+            uses12 = users;
+            console.log(uses12);
+            console.log(uses12[uses12.length - 1]);//האחרון שנירשם
+        }
+
+        function getECB_users(err) {
+            console.log(err);
+        }
+
+        function getFlat() {
+            api = server + "/api/Flats";
+            ajaxCall("GET", api, "", getSCB_flats, getECB_flats);
+
+        }
+
+        function getSCB_flats(FlatArr) {
+            console.log(FlatArr);
+            rendOllFlats(FlatArr);
+        }
+
+        function getECB_flats(err) {
+            console.log(err);
+
+        }
+
+        function rendOllFlats(arr) {
+            $("#flatlist").html("");
+            let str = ` <div class="container">
+                            <div id="flatlist" class="row">`
+            if (arr.length != 0) {
+                for (var i = 0; i < arr.length; i++) {
+                    str += `<div class="col-md-3 newCol">
+                            <h4> Flat ${i + 1}:</h4>
+                            ID:<span>${arr[i].id} <span/><br/>
+                            City: ${arr[i].city}<br/>
+                            Address: ${arr[i].address}<br/>
+                            Price: ${arr[i].price}<br/>
+                            Number Of Rooms: ${arr[i].numberOfRooms}<br/>
+                            <button class=btn id="${arr[i].id}">Click to buy</button><br/><br/>
+                            </div> <div/>`
+                }
+
+
+            }
+            str += `  </div> <br/>`
+            $("#flatlist").append(str);
+
+            //$(".btn").click(function () { ///כשלוחץ על הכפתור מועבר לוייקשיין
+            //    var flatId = $(this).closest(".newCol").find("span").text().split(" ")[0]; // מקבלים את האיידי מהספן שלו
+
+            //    window.location.href = "vacations.html?FlatId=" + flatId ; //שולחת לדף וייקשיין ומוסיפה את הקוורי סטרינג שקיבלתי
+            //})
+
+        }
+
+        function moveVac() {
+            sessionStorage.setItem("flatId", this.id);
+            window.location.href = "vacations.html";
+        }
+
+
+        function AddFlats() {
+            let flat = {
+                Id: $("#IDTB").val(),
+                City: $("#city-choice").val(),
+                Address: $('#addressTB').val(),
+                Price: $('#priceTB').val(),
+                NumberOfRooms: $('#NumberOfRoomsTB').val()
+            }
+            api = server + "/api/Flats";
+            ajaxCall("POST", api, JSON.stringify(flat), postSCB, postECB);
+            /* swal("Submitted to the server!", "Great Job", "success");*/
+
+        }
+        function postSCB(flatss) {
+            console.log(flatss);
+            if (flatss == false) {
+                swal("Error", "This id is already exists. Please try again.", "error");
+            }
+            else {
+                swal("Added Successfuly!", "Great Job", "success");
+                getFlat(); //קוראת לשרת שוב על מנת שיציג את הדירה האחרונה שהמשתמש הוסיף
+            }
+            
+        }
+
+        function postECB(err) {
+            console.log(err);
+            swal("Error", "An error occurred while processing your request. Please try again later.", "error");
+
+
+        }
+
+        function submit1() {
+            AddFlats();
+
+            return false;
+
+        }
+
+
+        function MoveToUpdate() {
+            if (sessionStorage == null) {
+                swal("You have to login first!", "Error", "error");
+                //לקרוא ללוגאין
+            }
+            else {
+                window.location.href = "Update.html";
+            }
+        }
+
+        function MoveToHome() {
+            if (sessionStorage == null) {
+                swal("You have to login first!", "Error", "error");
+                //לקרוא ללוגאין
+            }
+            else {
+                window.location.href = "Home.html";
+            }
+        }
+
+        function Logout() {
+            sessionStorage.clear();
+
+            swal("Logout Successfuly!", "Great Job", "success");
+
+        }
+
+
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div id="ph"></div>
+        <form id="pForm">
+            <h2>Insert A new Flat</h2>
+            <div class="form-group">
+                <label for="city-choice"><span class="red-star">★ </span>City</label><br />
+                <input list="cityDDL" id="city-choice" name="city-choice" required />
+                <datalist id="cityDDL" required>
+                    <!--required will not accept "" value-->
+                    <option value="Afula">
+                    <option value="Natanya">
+                    <option value="Hadera">
+                    <option value="Tel-Aviv">
+                    <option value="Eilat">
+                    <option value="Haifa">
+                </datalist>
+            </div>
+            <div class="form-group">
+                <label for="addressTB"><span class="red-star">★ </span>Address</label>
+                <input type="text" class="form-control" id="addressTB" placeholder="Enter the Address " required
+                       pattern=".{1,25}"
+                       oninvalid="this.setCustomValidity('Please enter up to 25 characters')"
+                       oninput="this.setCustomValidity('')" />
+            </div>
+            <div class="form-group">
+                <label for="priceTB"><span class="red-star">★ </span>Price</label>
+                <input type="number" class="form-control" id="priceTB" placeholder="Enter the Price " required />
+            </div>
+            <div class="form-group">
+                <label for="NumberOfRoomsTB"><span class="red-star">★ </span>Number Of Rooms</label>
+                <input type="number" class="form-control" id="NumberOfRoomsTB" placeholder="Enter the Number Of Rooms " min="1" max="8" required />
+            </div>
+            <input type="submit" value="Submit" class="btn-new" id=""/><br />
+        </form>
+        <div id="flatlist">
+            <h2>Existing Flats</h2>
+
+        </div>
+        <div>
+            <button class=btn-new id="update" onclick="MoveToUpdate()">Update</button><br /><br />
+            <button class=btn-new id="LogOut" onclick="Logout()">Logout</button><br /><br />
+            <button class=btn-new id="home" onclick="MoveToHome()">Home</button><br /><br />
+        </div>
+
+    </div>
+
+</body>
+</html>

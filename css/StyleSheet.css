@@ -1,0 +1,530 @@
+﻿.red-star {
+    color: red;
+}
+
+h4 {
+    text-decoration: underline;
+}
+
+.newCol {
+    border: solid 2px #de6599;
+    border-radius: 20px;
+    margin: 3px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.openBtn {
+    display: flex;
+    justify-content: left;
+}
+
+.openButton {
+    border: none;
+    border-radius: 5px;
+    background-color: #1c87c9;
+    color: white;
+    padding: 14px 20px;
+    cursor: pointer;
+    position: fixed;
+}
+
+.loginPopup {
+    position: relative;
+    text-align: center;
+    width: 100%;
+}
+
+.formPopup {
+    display: none;
+    position: fixed;
+    left: 45%;
+    top: 5%;
+    transform: translate(-50%, 5%);
+    border: 3px solid #999999;
+    z-index: 9;
+}
+
+.formContainer {
+    max-width: 300px;
+    padding: 20px;
+    background-color: #fff;
+}
+
+    .formContainer input[type=text],
+    .formContainer input[type=password] {
+        width: 100%;
+        padding: 15px;
+        margin: 5px 0 20px 0;
+        border: none;
+        background: #eee;
+    }
+
+        .formContainer input[type=text]:focus,
+        .formContainer input[type=password]:focus {
+            background-color: #ddd;
+            outline: none;
+        }
+
+    .formContainer .btn {
+        padding: 12px 20px;
+        border: none;
+        background-color: #8ebf42;
+        color: #fff;
+        cursor: pointer;
+        width: 100%;
+        margin-bottom: 15px;
+        opacity: 0.8;
+    }
+
+    .formContainer .cancel {
+        background-color: #cc0000;
+    }
+
+    .formContainer .btn:hover,
+    .openButton:hover {
+        opacity: 1;
+    }
+
+.flatsclass, .vacayclass {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    width: 200px;
+    height: 300px;
+    border: 1px solid black;
+    background-color: beige;
+    margin: 10px;
+    padding-top: 15px;
+    text-align: center;
+    font-size: 17px;
+}
+
+.titleLine {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#show {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+#showV {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.red-star {
+    color: purple;
+}
+
+#myFormF #myFormV #myFormU {
+    width: 500px;
+    height: 450px;
+    margin: 10px;
+    font-size: 18px;
+}
+
+#showFlats {
+    margin: 10px;
+}
+
+#reg {
+    display: none;
+}
+
+#update {
+    display: none;
+}
+
+#loginModal button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    #loginModal button:hover {
+        background-color: #0056b3;
+    }
+
+
+#loginModal .button-container {
+    text-align: center;
+    margin-top: 15px;
+}
+
+
+#loginModal input {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+/* Form styles */
+
+
+#myFormU {
+    width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+    #myFormU h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    #myFormU label {
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    #myFormU input[type="text"],
+    #myFormU input[type="email"],
+    #myFormU input[type="password"] {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    #myFormU button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+        #myFormU button:hover {
+            background-color: #0056b3;
+        }
+
+        #myFormU button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+    #myFormU .error {
+        color: red;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+/* Update form styles */
+#myFormUpdate {
+    width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+    #myFormUpdate h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    #myFormUpdate label {
+        display: block;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    #myFormUpdate input[type="text"],
+    #myFormUpdate input[type="email"],
+    #myFormUpdate input[type="password"] {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    #myFormUpdate button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #007bff;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+        #myFormUpdate button:hover {
+            background-color: #0056b3;
+        }
+
+        #myFormUpdate button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+
+    #myFormUpdate .error {
+        color: red;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+/* Responsive design */
+@media (max-width: 768px) {
+    #myFormU, #myFormUpdate {
+        width: 100%;
+    }
+}
+
+
+#showTbl {
+    width: 200px;
+    height: 100px;
+    font-size: 30px;
+    margin-bottom: 20px;
+    margin-top: 100px;
+    margin-left: 600px;
+    background-color: #3498db;
+    color: white;
+    border: 2px solid #3498db;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+    #showTbl:hover{
+        background-color: #2980b9; /* Darker blue on hover */
+        border-color: #2980b9;
+    }
+
+
+#adminLogout {
+    margin: 10px;
+    color: red;
+    margin-left: 1100px;
+}
+
+#showRepoBtn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    #showRepoBtn:hover {
+        background-color: #0056b3; /* Darker blue color on hover */
+    }
+
+#selectM {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+    #selectM option {
+        padding: 5px;
+        font-size: 14px;
+    }
+
+#showAvCityandPrice {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    font-size: 16px;
+}
+
+    #showAvCityandPrice div {
+        margin-bottom: 10px;
+    }
+
+
+/*/////////////////////
+*/
+.form-group {
+    margin: 20px auto;
+    width: 300px;
+    padding: 20px;
+    background-color: #f2f2f2;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+ Style inputs 
+input[type="text"], input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+Style the submit button
+input[type="submit"], .btn, .btn-new {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 3px;
+    color: white;
+    background-color: #007bff;
+    cursor: pointer;
+}
+
+
+
+    input[type="submit"]:hover, .btn:hover, .btn-new:hover {
+        background-color: #0056b3;
+    }
+
+ Additional styling for the home button to differentiate it 
+#home {
+    background-color: #28a745;
+}
+
+#home:hover {
+    background-color: #0056b3;
+}
+
+label {
+    color: #333;
+    font-weight: bold;
+}
+
+
+
+
+
+
+/* Overall body styling */
+
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #e9ecef;
+    color: #333;
+    margin: 0;
+    padding: 0;
+    background-image: linear-gradient(to right, #a1c4fd 0%, #c2e9fb 100%);
+/*    להוריד אם הflat  לא עובד*/ 
+    /* display: flex;*/
+    justify-content: center;
+    align-items: center;
+    height: 100vh; 
+}
+
+/* Adding some padding and margin to the container for better spacing */
+.container {
+    padding: 20px;
+    margin-top: 20px;
+}
+
+
+ Enhancing the form appearance 
+.form-group {
+    box-sizing: border-box;
+    margin: auto;
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+ Styling headings 
+h2 {
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 24px;
+}
+
+ Input field styles for a modern look 
+
+input[type="text"], input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 12px;
+    margin: 8px 0 20px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+    input[type="text"]:focus, input[type="password"]:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+
+ Enhancing the submit and other buttons 
+input[type="submit"], .btn {
+    font-size: 16px;
+    letter-spacing: 1px;
+    padding: 12px;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+    input[type="submit"]:hover, .btn:hover {
+        opacity: 0.9;
+    }
+
+Additional style for the Home button
+#home {
+    margin-top: 20px;
+    background-color: #007bff;
+}
+
+ Making labels more elegant 
+label {
+    display: block;
+    text-align: left;
+    margin: 0 0 5px 3px;
+    font-weight: normal;
+    font-size: 16px;
+    color: #666;
+}
+
+ Style adjustments for placeholders 
+::placeholder {
+    color: #aaa;
+}
+
+ Enhance focus state for accessibility 
+input:focus {
+    border-color: #64b5f6;
+}
+
+

@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="../js/ajaxCalls.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.css">
+
+    <link href="../css/StyleSheet.css" rel="stylesheet" />
+
+    <script>
+
+        $(document).ready(function () {
+            let port = 7195;
+            server = `https://localhost:${port}`;
+
+
+            //  $("#EndTB").on("blur", checkDate);
+            //  displayFlatId();
+
+            if (location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+                let port = "7235";
+                server = 'https://localhost:' + port;
+
+            }
+            else {
+                server = "https://proj.ruppin.ac.il/cgroup63/test2/tar1";
+            }
+
+            $('#pForm').submit(submit);
+
+        });
+
+        function submit() {
+            submitLogin();
+
+            return false;
+        } 
+
+        function Logout() {
+            sessionStorage.clear();
+
+            swal("Logout Successfuly!", "Great Job", "success");
+
+        }
+
+        function submitLogin() {
+
+            if (sessionStorage.getItem('myUsers') == null) {
+
+                email = document.getElementById('email').value;
+                password = document.getElementById('psw').value
+
+                user = {
+                    FirstName: " ",
+                    FamilyName: " ",
+                    Email: email,
+                    Password: password
+                }
+
+                Login(user);
+
+            }
+            else {
+                swal("You already loggdin!", "Error", "error");
+
+            }
+            //return false;
+        }
+
+
+        function Login(user) {
+
+            if (sessionStorage.getItem('myUsers') == null) {
+
+                let stringifiedUser = JSON.stringify(user);
+                let api = server + "/api/Users/LoginUser";
+                ajaxCall("POST", api, stringifiedUser, postSCB_Login, postECB_Login)
+               
+            }
+            else {
+                swal("You must disconnect from the previous user", "Login error", "error");
+            }
+        }
+
+        function postSCB_Login(data) {
+            console.log("this is data");
+            console.log(data);
+
+            let stringifiedUser = JSON.stringify(data)
+
+            if (data.email == null) {
+                swal("Login Failed!", "username or password is incorrect", "error");
+            }
+            else {
+                sessionStorage.setItem('myUsers', stringifiedUser);
+                swal("Login Successfuly!", "Great Job", "success");
+                window.location.href = "Home.html";
+            }
+
+
+            if (data.isAdmin == true) {
+
+                window.location.href = "Admin.html";
+            }
+
+        }
+
+        function postECB_Login(err) {
+            console.log(err);
+            let errMsg = err.responseText;
+
+            swal("Login Failed!", errMsg, "error");
+
+
+        }
+
+        function MoveToHome() {
+            window.location.href = "Home.html";
+        }
+
+        function MoveToRegister() {
+            window.location.href = "Users.html";
+        }
+
+
+
+
+    </script>
+</head>
+<body>
+
+    <div>
+       
+        <form id="pForm">
+            <div class="form-group">
+                <h2>Please Log in</h2><br /><br />
+                <label for="email">
+                    <strong>E-mail</strong>
+                </label>
+                <input type="text" id="email" placeholder="Your Email" name="email" required><br /><br />
+                <label for="psw">
+                    <strong>Password</strong>
+                </label>
+                <input type="password" id="psw" placeholder="Your Password" name="psw" required><br /><br />
+                <input type="submit" class="btn" value="Log in"><br /><br />
+
+
+                <button class=btn id="regester" onclick="MoveToRegister()">Register</button><br /><br />
+                <button class=btn id="home" onclick="MoveToHome()">Home</button><br /><br />
+            </div>
+        </form>
+        
+    </div>
+
+</body>
+</html>
